@@ -1,0 +1,139 @@
+import { Turtle, Screen } from 'turtle-js'; // Assuming a turtle library exists for JS
+import { random } from 'mathjs'; // Assuming a math library for random functions
+
+const wn = new Screen(); // setup the background
+wn.bgcolor("black");
+wn.bgpic("space.gif");
+wn.setup({ width: 700, height: 700 });
+const image_gif_path = "portal.gif"; // the portal image that the aliens come out of
+wn.addShape(image_gif_path);
+const font_setup = { font: "Arial", size: 10, style: "normal" };
+const txt = new Turtle(); // text next to button saying that its the restart button
+txt.color("white");
+txt.penup();
+txt.goto(-350, 290);
+txt.pendown();
+txt.write("Click to restart", font_setup);
+txt.penup();
+txt.goto(-320, 270);
+txt.pendown();
+txt.write("-->", font_setup);
+txt.hideturtle();
+
+const image_turtle = new Turtle(); // more of the portal 
+image_turtle.shape(image_gif_path);
+image_turtle.penup();
+image_turtle.shapesize({ width: 0.2, length: 0.2 });
+image_turtle.goto(0, 270);
+image_turtle.pendown();
+
+const redsquare = new Turtle(); // the line at the bottom that the aliens try reaching
+redsquare.shape('square');
+redsquare.shapesize({ width: 100, length: 0.2 });
+redsquare.penup();
+redsquare.setheading(90);
+redsquare.color("#e09270");
+redsquare.goto(0, -220);
+redsquare.pendown();
+
+wn.tracer(0); // setting up the restart button
+const restart_button = new Turtle();
+restart_button.shape("square");
+restart_button.color("Purple");
+restart_button.shapesize({ length: 3, width: 3 });
+restart_button.penup();
+restart_button.goto(-230, 290);
+restart_button.pendown();
+wn.addShape("spaceship.gif");
+
+const character = new Turtle(); // make the spaceship
+character.shape("spaceship.gif");
+character.color("#d473e6");
+character.penup();
+character.setheading(90);
+character.pensize(3);
+character.goto(0, -210);
+character.pendown();
+
+const directions = new Turtle(); // the directions on what to do in the game (just a lot of text)
+directions.penup();
+directions.goto(170, 200);
+directions.pendown();
+directions.color("white");
+directions.write("Use arrow keys", font_setup);
+directions.penup();
+directions.goto(170, 170);
+directions.pendown();
+directions.write("to move and x", font_setup);
+directions.penup();
+directions.goto(170, 140);
+directions.pendown();
+directions.write("or spacebar to", font_setup);
+directions.penup();
+directions.goto(170, 110);
+directions.write("shoot", font_setup);
+directions.penup();
+directions.goto(-200, -290);
+directions.pendown();
+directions.color("#32db51");
+directions.write("Don't let the aliens cross this line!", font_setup);
+directions.hideturtle();
+
+const score = new Turtle(); // score is the text turtle and scoren is the value
+let scoren = 0;
+
+score.penup();
+score.goto(-270, 200);
+score.pendown();
+score.color("white");
+wn.addShape("bullet.gif");
+
+// bullet list (idk if its gonna work but ima try rq)
+
+const bullets = []; // list for the bullets to spawn and append themselves to and remove
+const enemies = []; // same as bullets but with the aliens
+let game_overv = false;
+
+function fire_bullets() { // This will be called later to actually fire the bullets and later i will make the bullets move
+    if (!game_overv) {
+        const bullet = new Turtle();
+        bullet.shape("bullet.gif");
+        bullet.shapesize({ width: 1, length: 2 });
+        bullet.color("yellow");
+        bullet.penup();
+        bullet.setheading(90);
+        bullet.goto(character.xcor(), character.ycor() + 10);
+        bullet.speed = 3;
+        bullets.push(bullet);
+    }
+}
+
+// making the bullets move
+
+function move_bullets() {
+    if (!game_overv) {
+        bullets.forEach(bullet => {
+            const y = bullet.ycor();
+            bullet.sety(y + bullet.speed);
+        });
+        bullets.forEach(bullet => {
+            if (bullet.ycor() > 300) {
+                bullet.hideturtle();
+                bullets.splice(bullets.indexOf(bullet), 1);
+            }
+        });
+    }
+}
+
+// spawn the enemies
+wn.addShape("enemies.gif");
+function spawn_enemies() {
+    if (!game_overv) {
+        const enemy = new Turtle();
+        enemy.shape("enemies.gif");
+        enemy.color("#82EAF0");
+        enemy.shapesize({ width: 2, length: 2 });
+        enemy.setheading(-90);
+        // Additional enemy logic would go here
+    }
+}
